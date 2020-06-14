@@ -1,26 +1,51 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {plusValue, minusValue} from './store/actionCreators/counterActionCreator'
+import {connect} from 'react-redux'
 
-function App() {
+function App(props) {
+    console.log(props)
+
+    function plusCount() {
+        let counter = props.state.count
+        counter++
+        props.addCount(counter)
+    }
+
+    function minusCount() {
+        let counter = props.state.count
+        counter--
+        props.minusCount(counter)
+    }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p className='number'>{props.state.count}</p>
+      <button onClick={minusCount} className='-'>-</button>
+      <button onClick={plusCount} className='+'>+</button>
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        state
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addCount: (value) => {
+            dispatch(
+                plusValue(value)
+            )
+        },
+        minusCount: (value) => {
+            dispatch(
+                minusValue(value)
+            )
+        }
+    }
+}
+
+export default connect (mapStateToProps, mapDispatchToProps)(App);
